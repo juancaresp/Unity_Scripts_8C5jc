@@ -2,20 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class moverJugador : MonoBehaviour
+public class MoverJugador : MonoBehaviour
 {
-    public Rigidbody rb;
-    public float vel;
-
-    void FixedUpdate()
+    public Animator animator;
+    private Rigidbody rb;
+    public float wVelocity;
+    public float rVelocity;
+    // Start is called before the first frame update
+    void Start()
     {
-        if(Input.anyKey){
-            float h =Input.GetAxis("Horizontal");
-            float v =Input.GetAxis("Vertical");
-            Vector3 vector=new Vector3(h,0.0f,v);
-            rb.AddForce(vector*vel);
-        }else{
-            rb.velocity=new Vector3(0,-2,0);
+        rb=GetComponent<Rigidbody>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            rb.velocity=transform.forward * wVelocity * Time.deltaTime*100;
         }
+        if (Input.GetKey(KeyCode.S))
+        {
+            rb.velocity=-transform.forward * wVelocity * Time.deltaTime*100;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Rotate(0,-rVelocity*Time.deltaTime,0);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(0,rVelocity*Time.deltaTime,0);
+        }
+        if(!Input.GetKey(KeyCode.W)&&!Input.GetKey(KeyCode.S))
+        {
+            rb.velocity=Vector3.zero;
+        }
+
+        //Animaciones
+        if (Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.S))
+        {
+            animator.SetBool("walk",true);
+        }else{
+            animator.SetBool("walk",false);
+        }
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            animator.SetBool("atack",true);
+        }else{
+            animator.SetBool("atack",false);
+        }
+
     }
 }
